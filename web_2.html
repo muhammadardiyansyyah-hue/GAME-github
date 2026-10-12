@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tur Budaya Indonesia & Ular Tangga</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            background-color: #0d1b1e;
+        }
+
+        /* Container Slide */
+        .slider-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Tampilan Utama Setiap Slide */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #ffffff;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: scale(1.05);
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        /* Latar Belakang Masing-masing Slide */
+        .slide-1 {
+            background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), 
+                        url('game.jpg') center/cover no-repeat;
+        }
+
+        .slide-2 {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1511497584788-8767611136f6?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        }
+
+        .slide-3 {
+            background: linear-gradient(rgba(10, 25, 20, 0.85), rgba(10, 25, 20, 0.85)), 
+                        url('game.jpg') center/cover no-repeat;
+        }
+
+        /* Teks */
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            max-width: 600px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+            color: #e0e0e0;
+        }
+
+        /* Tombol Play & Navigasi */
+        .play-btn-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .play-button {
+            width: 85px;
+            height: 85px;
+            background: #2ecc71;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.5);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 14px 0 14px 24px;
+            border-color: transparent transparent transparent #ffffff;
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .play-button:hover {
+            background: #27ae60;
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(46, 204, 113, 0.7);
+        }
+
+        .pulse-ring {
+            position: absolute;
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: rgba(46, 204, 113, 0.4);
+            animation: pulse 2s infinite ease-out;
+            z-index: 1;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .nav-btn {
+            padding: 10px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .nav-btn-primary {
+            background: #2ecc71;
+            border-color: #2ecc71;
+        }
+
+        .nav-btn-primary:hover {
+            background: #27ae60;
+            color: #ffffff;
+        }
+
+        /* --- STYLING KHUSUS GAME ULAR TANGGA KEBUDAYAAN --- */
+        .game-container {
+            display: flex;
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            max-width: 900px;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(5, 70px);
+            grid-template-rows: repeat(4, 70px);
+            gap: 5px;
+            background: #111;
+            padding: 8px;
+            border-radius: 10px;
+            border: 2px solid #2ecc71;
+        }
+
+        .cell {
+            background: #223;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #fff;
+            border-radius: 5px;
+            position: relative;
+            padding: 2px;
+            text-align: center;
+            border: 1px solid #445;
+        }
+
+        .cell span.num {
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            font-size: 0.65rem;
+            color: #f1c40f;
+        }
+
+        .cell.culture {
+            background: #2c3e50;
+        }
+
+        .cell.ladder {
+            background: #27ae60; /* Tangga (Naik) */
+        }
+
+        .cell.snake {
+            background: #c0392b; /* Ular (Turun) */
+        }
+
+        .game-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: left;
+            min-width: 240px;
+        }
+
+        .dice-box {
+            background: #1a252f;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #34495e;
+            text-align: center;
+        }
+
+        .dice-result {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #f1c40f;
+            margin: 5px 0;
+        }
+
+        .player-token {
+            width: 25px;
+            height: 25px;
+            background: #e74c3c;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .log-box {
+            font-size: 0.85rem;
+            background: #111;
+            padding: 10px;
+            border-radius: 5px;
+            height: 90px;
+            overflow-y: auto;
+            color: #bdc3c7;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slider-container">
+        
+        <!-- SLIDE 1 -->
+        <div class="slide slide-1 active" id="slide1">
+            <h1 class="title">JELAJAHI KEBUDAYAAN INDONESIA</h1>
+            <p class="subtitle">Tekan tombol di bawah untuk memulai tur mengenal ragam budaya Nusantara.</p>
+            <div class="play-btn-wrapper">
+                <div class="pulse-ring"></div>
+                <button class="play-button" id="playBtn" aria-label="Mulai">
+                    <div class="play-icon"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- SLIDE 2 -->
+        <div class="slide slide-2" id="slide2">
+            <h1 class="title">LOGIN UNTUK MEMULAI GAME</h1>
+            <p class="subtitle">INI NANTI BUAT MENU LOGIN
+            </p>
+            <div class="btn-group">
+                <button class="nav-btn" id="backBtn">← Kembali</button>
+                <button class="nav-btn nav-btn-primary" id="toSlide3Btn">Mainkan Ular Tangga Budaya →</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: MINI GAME ULAR TANGGA KEBUDAYAAN INDONESIA -->
+        <div class="slide slide-3" id="slide3">
+            <h1 class="title" style="font-size: 1.8rem; margin-bottom: 5px;">Ular Tangga Budaya Indonesia</h1>
+            <p class="subtitle" style="margin-bottom: 15px; font-size: 0.95rem;">Capai Kotak 20 (Puncak Garuda Pancasila) untuk Menang!</p>
+            
+            <div class="game-container">
+                <!-- Papan Permainan 4x5 (20 Kotak) -->
+                <div class="board" id="board">
+                    <!-- Kotak akan di-generate via JavaScript -->
+                </div>
+
+                <!-- Panel Kontrol Permainan -->
+                <div class="game-sidebar">
+                    <div class="dice-box">
+                        <div>Dadu Budaya</div>
+                        <div class="dice-result" id="diceValue">-</div>
+                        <button class="nav-btn nav-btn-primary" id="rollDiceBtn" style="width: 100%; padding: 8px;">Lempar Dadu</button>
+                    </div>
+
+                    <div class="log-box" id="gameLog">
+                        Selamat datang! Lempar dadu untuk memulai perjalanan budaya.
+                    </div>
+
+                    <button class="nav-btn" id="resetGameBtn" style="font-size: 0.8rem; padding: 6px;">Ulangi Permainan</button>
+                </div>
+            </div>
+
+            <div class="btn-group" style="margin-top: 15px;">
+                <button class="nav-btn" id="backToSlide2Btn">← Kembali ke Slide 2</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Navigasi Slide
+        const playBtn = document.getElementById('playBtn');
+        const backBtn = document.getElementById('backBtn');
+        const toSlide3Btn = document.getElementById('toSlide3Btn');
+        const backToSlide2Btn = document.getElementById('backToSlide2Btn');
+
+        const slide1 = document.getElementById('slide1');
+        const slide2 = document.getElementById('slide2');
+        const slide3 = document.getElementById('slide3');
+
+        function showSlide(targetSlide) {
+            slide1.classList.remove('active');
+            slide2.classList.remove('active');
+            slide3.classList.remove('active');
+            targetSlide.classList.add('active');
+        }
+
+        playBtn.addEventListener('click', () => showSlide(slide2));
+        backBtn.addEventListener('click', () => showSlide(slide1));
+        toSlide3Btn.addEventListener('click', () => showSlide(slide3));
+        backToSlide2Btn.addEventListener('click', () => showSlide(slide2));
+
+        // --- LOGIKA GAME ULAR TANGGA KEBUDAYAAN ---
+        const boardData = [
+            { id: 20, label: "20. Garuda Pancasila (Finish!)" },
+            { id: 19, label: "19. Rumah Honai Papua" },
+            { id: 18, label: "18. Musik Sasando" },
+            { id: 17, label: "17. Patung Asmat" },
+            { id: 16, label: "16. Ular (Turun ke 6)", snake: 6 },
+            { id: 11, label: "11. Kain Tenun Sumba" },
+            { id: 12, label: "12. Tangga! (Naik ke 15)", ladder: 15 },
+            { id: 13, label: "13. Rumah Gadang" },
+            { id: 14, label: "14. Tari Piring" },
+            { id: 15, label: "15. Senjata Rencong" },
+            { id: 10, label: "10. Ular (Turun ke 3)", snake: 3 },
+            { id: 9,  label: "9. Angklung Sunda" },
+            { id: 8,  label: "8. Tangga! (Naik ke 18)", ladder: 18 },
+            { id: 7,  label: "7. Tari Kecak Bali" },
+            { id: 6,  label: "6. Wayang Kulit" },
+            { id: 1,  label: "1. Garis Start" },
+            { id: 2,  label: "2. Candi Borobudur" },
+            { id: 3,  label: "3. Kain Batik" },
+            { id: 4,  label: "4. ngawi" },
+            { id: 5,  label: "5. ngawi " }
+        ];
+
+        // Urutan visual grid ular tangga (Sistem Zig-Zag Snail sederhana)
+        const gridOrder = [
+            16, 17, 18, 19, 20,
+            15, 14, 13, 12, 11,
+            6,  7,  8,  9,  10,
+            5,  4,  3,  2,  1
+        ];
+
+        let playerPos = 1;
+        const boardEl = document.getElementById('board');
+        const rollDiceBtn = document.getElementById('rollDiceBtn');
+        const diceValueEl = document.getElementById('diceValue');
+        const gameLogEl = document.getElementById('gameLog');
+        const resetGameBtn = document.getElementById('resetGameBtn');
+
+        // Render Papan Game
+        function renderBoard() {
+            boardEl.innerHTML = '';
+            gridOrder.forEach(num => {
+                const info = boardData.find(item => item.id === num);
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                if(info.ladder) cell.classList.add('ladder');
+                else if(info.snake) cell.classList.add('snake');
+                else cell.classList.add('culture');
+
+                cell.innerHTML = `<span class="num">${num}</span><span>${info.label.split('. ')[1]}</span>`;
+                
+                // Jika posisi pemain ada di kotak ini, tampilkan bidak
+                if (num === playerPos) {
+                    const token = document.createElement('div');
+                    token.className = 'player-token';
+                    cell.appendChild(token);
+                }
+
+                boardEl.appendChild(cell);
+            });
+        }
+
+        // Lempar Dadu & Gerakkan Pemain
+        rollDiceBtn.addEventListener('click', () => {
+            let dice = Math.floor(Math.random() * 3) + 1; // Dadu 1-3 agar pas dengan ukuran papan
+            diceValueEl.textContent = dice;
+
+            playerPos += dice;
+            if (playerPos > 20) {
+                playerPos = 20; // Maksimal finis
+            }
+
+            let message = `Anda melempar angka ${dice}. Bergerak ke kotak ${playerPos}.`;
+
+            // Cek Ular atau Tangga
+            const currentData = boardData.find(item => item.id === playerPos);
+            if (currentData.ladder) {
+                playerPos = currentData.ladder;
+                message += ` Yeay! Menemukan tangga kebudayaan, naik ke kotak ${playerPos}!`;
+            } else if (currentData.snake) {
+                playerPos = currentData.snake;
+                message += ` Ups! Terkena rintangan, turun ke kotak ${playerPos}.`;
+            }
+
+            if (playerPos === 20) {
+                message += " 🎉 SELAMAT! Anda telah menyelesaikan tur Kebudayaan Indonesia!";
+                rollDiceBtn.disabled = true;
+            }
+
+            gameLogEl.innerHTML += `<br>` + message;
+            gameLogEl.scrollTop = gameLogEl.scrollHeight;
+            renderBoard();
+        });
+
+        resetGameBtn.addEventListener('click', () => {
+            playerPos = 1;
+            diceValueEl.textContent = '-';
+            gameLogEl.innerHTML = 'Permainan diulang. Lempar dadu kembali!';
+            rollDiceBtn.disabled = false;
+            renderBoard();
+        });
+
+        // Inisialisasi awal papan saat halaman dimuat
+        renderBoard();
+    </script>
+
+</body>
+</html>
